@@ -1,5 +1,5 @@
 import { useAuth } from '../context/AuthProvider'
-import { Button } from "@/components/ui/button"
+import { Button } from "../components/ui/button"
 import { UserPlus } from 'lucide-react'
 
 interface RegisterButtonProps {

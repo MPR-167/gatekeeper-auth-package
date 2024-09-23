@@ -1,0 +1,72 @@
+{
+  "name": "@gatekeeper-auth/react",
+  "version": "0.0.1",
+  "description": "React package that provides auth service for Gatekeeper",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "jest",
+    "lint": "eslint src/**/*.{ts,tsx}"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0",
+    "tailwindcss": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.5.0",
+    "@types/react": "^18.3.8",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.0.0",
+    "jest": "^27.0.0",
+    "postcss": "^8.4.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "rollup": "^2.75.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.0",
+    "tailwindcss": "^3.0.0",
+    "typescript": "^4.9.5",
+    "vite": "^5.4.7",
+    "vite-plugin-dts": "^4.2.1",
+    "vitest": "^2.1.1"
+  },
+  "dependencies": {
+    "@radix-ui/react-avatar": "^1.0.0",
+    "@radix-ui/react-dialog": "^1.0.0",
+    "class-variance-authority": "^0.4.0",
+    "clsx": "^1.2.0",
+    "lucide-react": "^0.100.0",
+    "tailwind-merge": "^1.8.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "author": "awesohame",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Gatekeeper-Auth-Manager/gatekeeper-auth-package.git"
+  },
+  "keywords": [
+    "gatekeeper",
+    "auth",
+    "react",
+    "authentication",
+    "auth-service"
+  ]
+}
