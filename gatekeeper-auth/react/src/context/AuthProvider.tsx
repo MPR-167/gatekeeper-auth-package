@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { createContext, useState, useContext, ReactNode } from 'react'
+import React, { createContext, useState, useContext, ReactNode } from 'react'
 
-interface AuthContextType {
+type AuthContextType = {
     isAuthenticated: boolean
     login: (username: string, password: string) => Promise<void>
     logout: () => void
@@ -18,16 +18,15 @@ export const useAuth = () => {
     return context
 }
 
-interface AuthProviderProps {
+type AuthProviderProps = {
+    tenantId: number
+    projectId: number
+    customRoleId: number
     children: ReactNode
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
+export function AuthProvider({ children, tenantId, projectId, customRoleId }: AuthProviderProps) {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
-
-    const tenantId = import.meta.env.VITE_APP_TENANT_ID
-    const projectId = import.meta.env.VITE_APP_PROJECT_ID
-    const customRoleId = import.meta.env.VITE_APP_CUSTOM_ROLE_ID
 
     const login = async (email: string, password: string) => {
         // Implement your login logic here

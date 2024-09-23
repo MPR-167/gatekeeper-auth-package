@@ -1,5 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import React from "react"
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
+import { Button } from "../components/ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -7,7 +8,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "../components/ui/dropdown-menu"
 import { useAuth } from '../context/AuthProvider'
 import { User, Settings, LogOut } from 'lucide-react'
 

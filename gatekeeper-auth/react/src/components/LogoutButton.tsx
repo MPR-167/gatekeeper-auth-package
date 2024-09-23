@@ -1,5 +1,6 @@
+import React from 'react'
 import { useAuth } from '../context/AuthProvider'
-import { Button } from "@/components/ui/button"
+import { Button } from "../components/ui/button"
 import { LogOut } from 'lucide-react'
 
 interface LogoutButtonProps {
