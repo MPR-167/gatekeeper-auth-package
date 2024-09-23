@@ -3,7 +3,7 @@
 // import { Login } from "./components/Login"
 // import Register from "./components/Register"
 // import { AuthProvider } from "./context/AuthProvider"
-import { AuthProvider, Register } from 'gatekeeper-auth'
+import { AuthProvider, Register } from '@gatekeeper-auth/react'
 
 function App() {
 

@@ -1,4 +1,3 @@
-import React from 'react'
 import { useAuth } from '../context/AuthProvider'
 import { Button } from "../components/ui/button"
 import { UserPlus } from 'lucide-react'

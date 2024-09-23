@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useState } from 'react'
 import { useAuth } from '../context/AuthProvider'
 import { Button } from "../components/ui/button"

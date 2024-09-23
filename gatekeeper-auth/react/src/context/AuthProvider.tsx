@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { createContext, useState, useContext, ReactNode } from 'react'
+import { createContext, useState, useContext, ReactNode } from 'react'
 
 type AuthContextType = {
     isAuthenticated: boolean

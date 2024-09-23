@@ -1,5 +1,5 @@
 {
-  "name": "@gatekeeper/react",
+  "name": "@gatekeeper-auth/react",
   "version": "0.0.1",
   "description": "React package that provides auth service for Gatekeeper",
   "type": "module",
