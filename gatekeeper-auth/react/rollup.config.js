@@ -4,6 +4,8 @@ import typescript from '@rollup/plugin-typescript';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
 import babel from '@rollup/plugin-babel';
+import terser from '@rollup/plugin-terser';
+
 
 export default {
   input: 'index.ts',
@@ -11,12 +13,12 @@ export default {
     {
       file: 'dist/index.js',
       format: 'cjs',
-      sourcemap: true,
+      sourcemap: false, // Disable sourcemaps in production
     },
     {
       file: 'dist/index.esm.js',
       format: 'esm',
-      sourcemap: true,
+      sourcemap: false, // Disable sourcemaps in production
     },
   ],
   plugins: [
@@ -24,7 +26,7 @@ export default {
     resolve({
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
     }),
-    commonjs(),
+    commonjs(), // Keep this if you're using commonjs modules from node_modules
     typescript({
       tsconfig: './tsconfig.json',
       declaration: true,
@@ -42,10 +44,8 @@ export default {
       },
       extensions: ['.css'],
       minimize: true,
-      inject: {
-        insertAt: 'top',
-      },
     }),
+    terser(), // Minify only in production using terser
   ],
   external: ['react', 'react-dom', 'axios'],
 };

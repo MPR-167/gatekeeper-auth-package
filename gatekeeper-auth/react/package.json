@@ -1,6 +1,6 @@
 {
   "name": "@gatekeeper-auth/react",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "React package that provides auth service for Gatekeeper",
   "type": "module",
   "main": "dist/index.js",
@@ -23,6 +23,7 @@
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^8.5.0",
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
@@ -45,6 +46,10 @@
   "dependencies": {
     "@radix-ui/react-avatar": "^1.0.0",
     "@radix-ui/react-dialog": "^1.0.0",
+    "@radix-ui/react-dropdown-menu": "^2.1.1",
+    "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-label": "^2.1.0",
+    "axios": "^1.7.7",
     "class-variance-authority": "^0.4.0",
     "clsx": "^1.2.0",
     "lucide-react": "^0.100.0",

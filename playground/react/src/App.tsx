@@ -4,12 +4,14 @@
 // import Register from "./components/Register"
 // import { AuthProvider } from "./context/AuthProvider"
 import { AuthProvider, Register } from '@gatekeeper-auth/react'
+import Test from './components/Test';
 
 function App() {
-
   return (
-    <AuthProvider projectId={2} customRoleId={1} tenantId={1}>
+    <AuthProvider>
       <Register />
+      <Test />
+
     </AuthProvider>
   )
 }
