@@ -1,85 +1,60 @@
-import React, { useState } from 'react'
-import { useAuth } from '../context/AuthProvider'
-import { Button } from "../components/ui/button"
-import { Input } from "../components/ui/input"
-import { Label } from "../components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card"
+import React, { useState } from "react";
+import { useAuth } from "../context/AuthProvider";
 
-export function Register() {
-    const [email, setEmail] = useState('')
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const { register } = useAuth()
+export const Register: React.FC = () => {
+  const { register } = useAuth();
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        if (password !== confirmPassword) {
-            alert("Passwords don't match")
-            return
-        }
-        register(email, username, password)
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await register(email, username, password);
+    } catch (err) {
+      setError("Registration failed. Please check your information.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    return (
-        <Card className="w-[350px]">
-            <CardHeader>
-                <CardTitle>Register</CardTitle>
-                <CardDescription>Create a new account to get started.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <form onSubmit={handleSubmit}>
-                    <div className="grid w-full items-center gap-4">
-                        <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                placeholder="Enter your email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="username">Username</Label>
-                            <Input
-                                id="username"
-                                placeholder="Choose a username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="password">Password</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                placeholder="Choose a password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="confirm-password">Confirm Password</Label>
-                            <Input
-                                id="confirm-password"
-                                type="password"
-                                placeholder="Confirm your password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
-                            />
-                        </div>
-                    </div>
-                </form>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-                <Button variant="outline">Cancel</Button>
-                <Button onClick={handleSubmit}>Register</Button>
-            </CardFooter>
-        </Card>
-    )
-}
+  return (
+    <form onSubmit={handleRegister}>
+      <h2>Register</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <div>
+        <label>Email:</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>Username:</label>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>Password:</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+      <button type="submit" disabled={loading}>
+        {loading ? "Registering..." : "Register"}
+      </button>
+    </form>
+  );
+};

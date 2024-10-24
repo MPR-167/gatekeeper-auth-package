@@ -1,5 +1,4 @@
-import { useAuth } from '../context/AuthProvider'
-import { Button } from "@/components/ui/button"
+import { useAuth } from '../context/AuthContext'
 import { LogOut } from 'lucide-react'
 
 interface LogoutButtonProps {
@@ -10,12 +9,10 @@ export function LogoutButton({ className }: LogoutButtonProps) {
     const { logout } = useAuth()
 
     return (
-        <Button
-            variant="outline"
-            className={className}
+        <button
             onClick={logout}
         >
             <LogOut className="mr-2 h-4 w-4" /> Logout
-        </Button>
+        </button>
     )
 }

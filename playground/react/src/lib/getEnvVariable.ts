@@ -14,9 +14,8 @@ export const getEnvVariable = (key: string) => {
 
 export const getPublicEnvVariables = () => {
   return {
-    publishableKey: getEnvVariable('VITE_GATEKEEPER_REACT_KEY'),
-    iv: getEnvVariable('VITE_GATEKEEPER_REACT_IV'),
-    secret: getEnvVariable('VITE_GATEKEEPER_REACT_ENCRYPTION_SECRET'),
+    clientSecret: getEnvVariable('VITE_GATEKEEPER_CLIENT_SECRET'),
+    clientId: getEnvVariable('VITE_GATEKEEPER_CLIENT_ID'),
   };
 };
 

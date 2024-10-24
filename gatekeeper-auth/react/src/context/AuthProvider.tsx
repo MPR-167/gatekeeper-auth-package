@@ -11,13 +11,14 @@ import { decryptJsonData } from "../lib/utils";
 
 type AuthContextType = {
   isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   register: (
     email: string,
     username: string,
     password: string
   ) => Promise<void>;
+  verifyOTP: (email: string, otp: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -36,51 +37,79 @@ type AuthProviderProps = {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [tenantId, setTenantId] = useState<number | null>(null);
-  const [projectId, setProjectId] = useState<number | null>(null);
-  const [customRoleId, setCustomRoleId] = useState<number | null>(null);
+  const [tenantId, setTenantId] = useState<string | null>(null);
+  const [projectId, setProjectId] = useState<string | null>(null);
+  const [customRoleId, setCustomRoleId] = useState<string | null>(null);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [providers, setProviders] = useState<{
+    isGoogleProvider: boolean;
+    isGithubProvider: boolean;
+    isVerificationCodeToEmail: boolean;
+  }>({
+    isGoogleProvider: false,
+    isGithubProvider: false,
+    isVerificationCodeToEmail: false,
+  });
 
   useEffect(() => {
     async function decrypt() {
-      console.log("Decrypting...");
-
       const { publishableKey, iv, secret } = getPublicEnvVariables();
 
-      console.log("The publishableKey is: ", publishableKey);
-      console.log("The iv is: ", iv);
-      console.log("The secret is: ", secret);
-
-      const data = await decryptJsonData(
+      const data : any = await decryptJsonData(
         { encryptedData: publishableKey as string, iv: iv as string },
         secret as string
       );
-      console.log("The data is: ", data);
-      const { tenantId, projectId, customRoleId } = data;
 
-      console.log("The tenantId is: ", tenantId);
-      console.log("The projectId is: ", projectId);
-      console.log("The customRoleId is: ", customRoleId);
+      const { tenantId, projectId, customRoleId, clientSecret } = data;
 
       setTenantId(tenantId);
       setProjectId(projectId);
       setCustomRoleId(customRoleId);
+      setClientSecret(clientSecret);
+
+      // Fetch the project info using clientSecret
+      if (clientSecret) {
+        const projectInfo = await fetchProjectInfo(clientSecret);
+        setProviders({
+          isGoogleProvider: projectInfo.isGoogleProvider,
+          isGithubProvider: projectInfo.isGithubProvider,
+          isVerificationCodeToEmail: projectInfo.isVerificationCodeToEmail,
+        });
+      }
     }
 
     decrypt();
   }, []);
 
+  const fetchProjectInfo = async (clientSecret: string) => {
+    try {
+      const response = await axios.post("/genrate-auth-url", {
+        clientSecret,
+      });
+      return response.data; // project data contains provider info, etc.
+    } catch (error) {
+      console.error("Error fetching project info:", error);
+      throw new Error("Failed to fetch project information.");
+    }
+  };
+
   const login = async (email: string, password: string) => {
-    // console.log('Logging in Logic :', email)
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/login",
+        "/login-with-credentials",
         {
           email,
           password,
+          tenantId,
+          projectId,
         }
       );
       if (response.status === 200) {
         setIsAuthenticated(true);
+        if (providers.isVerificationCodeToEmail) {
+          // Wait for email OTP verification
+          console.log("Please check your email for the OTP.");
+        }
       } else {
         throw new Error("Login failed");
       }
@@ -90,23 +119,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const logout = () => {
-    // Implement your logout logic here
-    console.log("Logging out");
-    setIsAuthenticated(false);
-  };
-
   const register = async (
     email: string,
     username: string,
     password: string
   ) => {
-    // Implement your registration logic here
-    // console.log('Registering logic for ', email)
-
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/register",
+        "/register-with-credentials",
         {
           email,
           username,
@@ -118,6 +138,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       );
       if (response.status === 201) {
         setIsAuthenticated(true);
+        if (providers.isVerificationCodeToEmail) {
+          console.log("Please check your email for the verification code.");
+        }
       } else {
         throw new Error("Registration failed");
       }
@@ -127,8 +150,32 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const verifyOTP = async (email: string, otp: string) => {
+    try {
+      const response = await axios.post("/verify-otp", {
+        email,
+        otp,
+      });
+      if (response.status === 200) {
+        console.log("OTP verified successfully!");
+        setIsAuthenticated(true);
+      } else {
+        throw new Error("OTP verification failed");
+      }
+    } catch (error) {
+      console.error("OTP verification error:", error);
+    }
+  };
+
+  const logout = () => {
+    console.log("Logging out");
+    setIsAuthenticated(false);
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, register }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, login, logout, register, verifyOTP }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -8,7 +8,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useAuth } from '../context/AuthProvider'
+import { useAuth } from '../context/AuthContext'
 import { User, Settings, LogOut } from 'lucide-react'
 
 interface AvatarDropdownProps {

@@ -1,55 +1,44 @@
-import React, { useState } from 'react'
-import { useAuth } from '../context/AuthProvider'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 
-export function Login() {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const { login } = useAuth()
+export const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        login(username, password)
-    }
+  const {login} = useAuth();
 
-    return (
-        <Card className="w-[350px]">
-            <CardHeader>
-                <CardTitle>Login</CardTitle>
-                <CardDescription>Enter your credentials to access your account.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <form onSubmit={handleSubmit}>
-                    <div className="grid w-full items-center gap-4">
-                        <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="username">Username</Label>
-                            <Input
-                                id="username"
-                                placeholder="Enter your username"
-                                value={username}
-                                onChange={(e: any) => setUsername(e.target.value)}
-                            />
-                        </div>
-                        <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="password">Password</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                placeholder="Enter your password"
-                                value={password}
-                                onChange={(e: any) => setPassword(e.target.value)}
-                            />
-                        </div>
-                    </div>
-                </form>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-                <Button variant="outline">Cancel</Button>
-                <Button onClick={handleSubmit}>Login</Button>
-            </CardFooter>
-        </Card>
-    )
-}
+  const handleLogin = async () => {
+    login(email, password);
+    console.log("Login successful");
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-white">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="w-full p-2 mb-4 border border-gray-300 rounded"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          className="w-full p-2 mb-4 border border-gray-300 rounded"
+        />
+        <button
+          onClick={handleLogin}
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+        >
+          Login
+        </button>
+      {/* 
+        {showOTP && <OTP email={email} />} */}
+      </div>
+    </div>
+  );
+};

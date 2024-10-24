@@ -1,4 +1,4 @@
-import { useAuth } from '../context/AuthProvider'
+import { useAuth } from '../context/AuthContext'
 import { Button } from "@/components/ui/button"
 import { UserPlus } from 'lucide-react'
 
