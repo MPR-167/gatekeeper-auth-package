@@ -132,68 +132,75 @@ export const Register = () => {
     }
   };
 
-  // Google Sign In handler
-  const handleGoogleSignIn = async () => {
-    try {
-      const response = await axios.post<GoogleAuthResponse>(
-        `${API_CONFIG.baseURL}${API_CONFIG.endpoints.generateAuthUrl}`,
-        {
-          clientId: '768942326999-e8cskt47nsv7phhvreapj3i108ogm2i1.apps.googleusercontent.com',
-          clientSecret: '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',
-          provider: 'google',
-          redirectUri: 'http://localhost:3000/api/auth/callback/google',
-          projectId,
-          gateKeepClient: clientId,
-          gateKeepSecret: clientSecret,
-          // redirectUri: `${window.location.origin}/api/auth/callback/google`,
-        }
-      );
-      
-      console.log(response);
-      if (!response.data.data.authUrl) {
-        throw new Error('Failed to generate authentication URL');
+  // Google Sign In handler=
+
+const handleGoogleSignIn = async () => {
+  try {
+    const response = await axios.post<GoogleAuthResponse>(
+      `${API_CONFIG.baseURL}${API_CONFIG.endpoints.generateAuthUrl}`,
+      {
+        clientId: '768942326999-e8cskt47nsv7phhvreapj3i108ogm2i1.apps.googleusercontent.com',
+        clientSecret: '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',
+        provider: 'google',
+        redirectUri: `${window.location.origin}/api/auth/callback/google`,
+        projectId,
+        gateKeepClient: clientId,
+        gateKeepSecret: clientSecret,
       }
+    );
 
-      const popup = window.open(
-        response.data.data.authUrl,
-        'Google Sign In',
-        'width=500,height=600,left=0,top=0'
-      );
-
-      if (!popup) {
-        throw new Error('Popup blocked. Please enable popups for this site.');
-      }
-
-      const messageHandler = async (event: MessageEvent) => {
-        console.log(event);
-        if (event.origin !== window.location.origin) return;
-        console.log(event.data);
-        if (event.data?.type === 'GOOGLE_OAUTH_CALLBACK' && event.data?.code) {
-          window.removeEventListener('message', messageHandler);
-          popup.close();
-
-          try {
-            await axios.post(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.googleSignIn}`, {
-              code: event.data.code,
-              clientId: '768942326999-e8cskt47nsv7phhvreapj3i108ogm2i1.apps.googleusercontent.com',
-              clientSecret: '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',
-              provider: 'google',
-              gateKeepClient: clientId,
-              gateKeepSecret: clientSecret,
-            });
-            // Redirect to dashboard on successful sign-in
-            window.location.href = '/';
-          } catch (err) {
-            console.error('Google sign-in failed. Please try again.');
-          }
-        }
-      };
-
-      window.addEventListener('message', messageHandler);
-    } catch (err) {
-      console.error(err instanceof Error ? err.message : 'Failed to initialize Google sign-in');
+    if (!response.data.data.authUrl) {
+      throw new Error('Failed to generate authentication URL');
     }
-  };
+
+    const popup = window.open(
+      response.data.data.authUrl,
+      'Google Sign In',
+      'width=500,height=600,left=0,top=0'
+    );
+
+    if (!popup) {
+      throw new Error('Popup blocked. Please enable popups for this site.');
+    }
+
+    // Listen for messages from the popup window
+    const messageHandler = async (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+
+      const { code, state } = event.data;
+      if (code && state) {
+        window.removeEventListener('message', messageHandler);
+        popup.close();
+
+        try {
+          await axios.post(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.googleSignIn}`, {
+            code,
+            state,
+            clientId: '768942326999-e8cskt47nsv7phhvreapj3i108ogm2i1.apps.googleusercontent.com',
+            clientSecret: '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',
+            provider: 'google',
+            gateKeepClient: clientId,
+            gateKeepSecret: clientSecret,
+          },
+          {
+            headers: { "Content-Type": "application/json"},
+            withCredentials: true,
+          }
+        );
+          // Redirect to dashboard on successful sign-in
+          window.location.href = '/';
+        } catch (err) {
+          console.error('Google sign-in failed. Please try again.');
+        }
+      }
+    };
+
+    window.addEventListener('message', messageHandler);
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : 'Failed to initialize Google sign-in');
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

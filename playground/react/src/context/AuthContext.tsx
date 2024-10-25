@@ -96,8 +96,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
           const projectInfo = (await axios.post(
             "http://localhost:4000/api/v1/get-project",
             {
-              clientSecret,
               clientId,
+              clientSecret,
             },
             {
               headers: { "Content-Type": "application/json" },
@@ -105,7 +105,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             }
           )) as any;
           const projectData = projectInfo.data.data;
-
+          console.log(projectData);
           setProjectId(projectData.id);
           setClientSecret(clientSecret);
           setClientId(clientId);
@@ -151,6 +151,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setIsLoading(true);
     setError(null);
     try {
+      console.log("email", email);
+      console.log("password", password);
+      console.log("projectId", projectId);  
       const response = await axios.post(
         `${API_BASE_URL}/login-with-credentials`,
         {
@@ -167,12 +170,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (response.status === 200) {
         setIsAuthenticated(true);
         setUser(response.data.user);
-
+        // console.log(response.data);
         return {
           requiresOTP:
             providers.isVerificationCodeToEmail &&
-            !response.data.user.isVerified,
-          user: response.data.user,
+            !response.data.data.isVerified,
+          user: {
+            userId: response.data.data.userId,
+            username: response.data.data.userName, 
+            email: response.data.data.email,
+          }
         };
       }
 

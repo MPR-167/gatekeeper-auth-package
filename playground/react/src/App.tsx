@@ -1,27 +1,18 @@
-// import { AccountModal } from "./components/AccountModal"
-// import { AvatarDropdown } from "./components/AvatarDropdown"
-// import { Login } from "./components/Login"
-// import Register from "./components/Register"
-// import { AuthProvider } from "./context/AuthProvider"
-// import { AuthProvider, Register } from '@gatekeeper-auth/react'
-
-import { Login } from "./components/Login"
-import { LogoutButton } from "./components/LogoutButton"
-import { Register } from "./components/Register"
-import { AuthProvider } from "./context/AuthContext"
+// App.tsx
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import CallbackPage from "./pages/CallbackPage";
+import HomePage from './pages/HomePage';  // Assuming HomePage is in pages directory
 
 
-
-function App() {
+const App = () => {
   return (
-    <AuthProvider>
-      <div className="flex flex-col items-center justify-center bg-gray-900 h-screen w-screen">
-      {/* <Register/> */}
-      {/* <Login/> */}
-      <LogoutButton />
-      </div>
-    </AuthProvider>
-  )
-}
+    <Router>
+      <Routes>
+        <Route path="api/auth/callback/google" element={<CallbackPage />} />
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+    </Router>
+  );
+};
 
-export default App
+export default App;
